@@ -38,7 +38,7 @@
 		<mkdir dir="${dist}" />
 
 		<!-- Put everything in ${build} into a jar file -->
-		<jar jarfile="${dist}/WordCount.jar" basedir="${build}" />
+		<jar jarfile="${dist}/OlympicTweets.jar" basedir="${build}" />
 	</target>
 
 	<target name="clean" description="clean up">

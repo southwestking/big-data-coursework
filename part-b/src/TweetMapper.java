@@ -31,7 +31,7 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     }
 	
 	public String minMax(int value){
-//this keeps it in the 1-5,6-10 range
+	//this keeps it in the 1-5,6-10 range
 		value = (value % 5 == 0) ? value-1 : value; 
 			
 		if (value<=0)

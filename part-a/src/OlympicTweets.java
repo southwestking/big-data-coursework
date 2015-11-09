@@ -8,17 +8,17 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class WordCount {
+public class OlympicTweets {
 
   public static void runJob(String[] input, String output) throws Exception {
 
         Configuration conf = new Configuration();
 
     Job job = new Job(conf);
-    job.setJarByClass(WordCount.class);
-    job.setMapperClass(TokenizerMapper.class);
-    job.setCombinerClass(IntSumReducer.class);
-    job.setReducerClass(IntSumReducer.class);
+    job.setJarByClass(OlympicTweets.class);
+    job.setMapperClass(TweetMapper.class);
+    job.setCombinerClass(TweetReducer.class);
+    job.setReducerClass(TweetReducer.class);
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(IntWritable.class);
     job.setNumReduceTasks(1);

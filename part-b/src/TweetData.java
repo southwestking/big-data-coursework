@@ -5,13 +5,13 @@ import java.util.Date;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import java.util.StringTokenizer;
-
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.*;
 
 public class TweetData implements WritableComparable<TweetData> {
 
 	private Text id;
-	private Text dateTime;
+	private Longwritable dateTime;
 	private Text hashtages;
 	private Text tweet;
 
@@ -44,11 +44,14 @@ public class TweetData implements WritableComparable<TweetData> {
 	}
 	
 	public Text getId(){ return (id!=null) ? id : null;}
-	public Text getDateTime(){ return (dateTime!=null) ? dateTime : null;}
+	public LongWritable getDateTime(){ return (dateTime!=null) ? dateTime : null;}
 	public Text getHashtages(){ return (hashtages!=null) ? hashtages : null;}
 	public Text getTweet(){ return (tweet!=null) ? tweet : null;}
 	
-	
+	public LongWritable getDate(){
+		new SimpleDateFormat("yyyy-MM-dd").format(new Date(get()) 
+		return (dateTime!=null) ? dateTime : null;
+	}
 	public Text getTweetLenght(){ return (id!=null) ? id : null;}
 	public Text getLimiterString(){ return (id!=null) ? id : null;}
 	
