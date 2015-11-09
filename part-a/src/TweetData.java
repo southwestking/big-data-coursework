@@ -24,12 +24,10 @@ public class TweetData implements WritableComparable<TweetData> {
 	}
 	
 	/**
-	
 		0 = tweet ID
 		1 = data/time
 		2 = hashtages
 		3 = tweet
-	
 	*/
 	public void setFromString(String value){
 		String[] tweetData = value.split(";");
@@ -37,19 +35,22 @@ public class TweetData implements WritableComparable<TweetData> {
 	}
 	
 	public void set(String id, String dateTime, String hashtages, String tweet){
-		this.id.set(id);
-		this.dateTime.set(dateTime);
-		this.hashtages.set(hashtages);
-		this.tweet.set(tweet);
+		if(id.equals(null))
+			this.id.set(id);
+		if(dateTime.equals(null))
+			this.dateTime.set(dateTime);
+		if(hashtages.equals(null))
+			this.hashtages.set(hashtages);
+			this.tweet.set(tweet);
 	}
 	
 	public Text getId(){ return (id!=null) ? id : null;}
 	public Text getDateTime(){ return (dateTime!=null) ? dateTime : null;}
 	public Text getHashtages(){ return (hashtages!=null) ? hashtages : null;}
-	public Text getTweet(){ return (tweet!=null) ? tweet : null;}
+	public Text getTweet(){ return tweet;}
 	
 	
-	public Text getTweetLenght(){ return (id!=null) ? id : null;}
+	public int getTweetLenght(){ return getTweet().toString().length();}
 	public Text getLimiterString(){ return (id!=null) ? id : null;}
 	
 	public StringTokenizer getStringTokenizer(){
