@@ -7,7 +7,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     
 	private final IntWritable one = new IntWritable(1);
-	private Text data = new Text();
 	TweetData tweetObj = new TweetData();
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -18,11 +17,11 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 		//}
 		String[] tweetData = value.toString().split(";");
 		
-		//tweetObj.setFromString(value.toString());
-		//int tweetLength = tweetObj.getTweetLenght();
-			
-			data.set(minMax(tweetData[3].length()));
-			context.write(data, one);
+		tweetObj.setFromString(value.toString());
+		int tweetLength = tweetObj.getTweetLenght();
+		context.write(new Text(minMax(tweetLength)), one);	
+			//data.set(minMax(tweetData[3].length()));
+			//context.write(data, one);
         
     }
 	

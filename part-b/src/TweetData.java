@@ -5,31 +5,29 @@ import java.util.Date;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import java.util.StringTokenizer;
-import org.apache.hadoop.io.LongWritable;
+
 import org.apache.hadoop.io.*;
 
 public class TweetData implements WritableComparable<TweetData> {
+	private int CHARACTER_LIMIT = 140;
 
 	private Text id;
-	private Longwritable dateTime;
+	private Text dateTime;
 	private Text hashtages;
 	private Text tweet;
 
 	private boolean hasHashtages;
 	private IntWritable tweetLenght;
 
-	
 	public TweetData(){
 		
 	}
 	
 	/**
-	
 		0 = tweet ID
 		1 = data/time
 		2 = hashtages
 		3 = tweet
-	
 	*/
 	public void setFromString(String value){
 		String[] tweetData = value.split(";");
@@ -37,29 +35,37 @@ public class TweetData implements WritableComparable<TweetData> {
 	}
 	
 	public void set(String id, String dateTime, String hashtages, String tweet){
-		this.id.set(id);
-		this.dateTime.set(dateTime);
-		this.hashtages.set(hashtages);
-		this.tweet.set(tweet);
+		this.id = new Text(id);
+		this.dateTime = new Text(dateTime);
+		this.hashtages = new Text(hashtages);	
+		this.tweet = new Text(tweet);
 	}
 	
-	public Text getId(){ return (id!=null) ? id : null;}
-	public LongWritable getDateTime(){ return (dateTime!=null) ? dateTime : null;}
-	public Text getHashtages(){ return (hashtages!=null) ? hashtages : null;}
-	public Text getTweet(){ return (tweet!=null) ? tweet : null;}
-	
-	public LongWritable getDate(){
-		new SimpleDateFormat("yyyy-MM-dd").format(new Date(get()) 
-		return (dateTime!=null) ? dateTime : null;
+	public Text getId(){ 
+		return id;
 	}
-	public Text getTweetLenght(){ return (id!=null) ? id : null;}
-	public Text getLimiterString(){ return (id!=null) ? id : null;}
+	public Text getDateTime(){ 
+		return dateTime;
+	}
+	public Text getHashtages(){ 
+		return hashtages;
+	}
+	public Text getTweet(){ 
+		return tweet;
+	}
+	public Text getDate(){ 
+		String[] dates = getDateTime().toString().split(",");
+		return new Text(dates[0]);
+	}
+	
+	public int getTweetLenght(){ 
+		return getTweet().toString().length();
+	}
 	
 	public StringTokenizer getStringTokenizer(){
 		StringTokenizer itr = new StringTokenizer(tweet.toString(), " \t\n\r\f,.:;?!#[]'");
 		return itr;
 	}
-	
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
