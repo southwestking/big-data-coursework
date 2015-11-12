@@ -84,7 +84,12 @@ public class TweetData implements WritableComparable<TweetData> {
 	}
 	
 	
-	public int compareTo(TweetData td) {
+	public int compareTo(TweetData td/*DailyStock st*/) {
+		// int cmp = company.compareTo(st.getCompany());
+		// if (cmp != 0) {
+		// 	return cmp;
+		// }
+		// return day.compareTo(st.getDay());
 		return 0;
 	}
 }

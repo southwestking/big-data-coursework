@@ -11,22 +11,16 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         
-        // while (itr.hasMoreTokens()) {
-        //   data.set(itr.nextToken().toLowerCase());
-        //   context.write(data, one);
-		//}
 		String[] tweetData = value.toString().split(";");
 		
 		tweetObj.setFromString(value.toString());
 		int tweetLength = tweetObj.getTweetLenght();
-		context.write(new Text(minMax(tweetLength)), one);	
-			//data.set(minMax(tweetData[3].length()));
-			//context.write(data, one);
-        
+		if(tweetLength > 0 && tweetLength < 141)
+			context.write(new Text(minMax(tweetLength)), one);	        
     }
 	
 	public String minMax(int value){
-//this keeps it in the 1-5,6-10 range
+	//this keeps it in the 1-5,6-10 range
 		value = (value % 5 == 0) ? value-1 : value; 
 			
 		if (value<=5)

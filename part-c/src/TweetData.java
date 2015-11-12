@@ -50,6 +50,9 @@ public class TweetData implements WritableComparable<TweetData> {
 	public Text getHashtages(){ 
 		return hashtages;
 	}
+	public String[] getSplitTages(){
+		return getHashtages().toString().split(" ");
+	}
 	public Text getTweet(){ 
 		return tweet;
 	}
