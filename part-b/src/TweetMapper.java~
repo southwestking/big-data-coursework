@@ -7,14 +7,24 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     
 	private final IntWritable one = new IntWritable(1);
-	TweetData tweetObj = new TweetData();
+	
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         
-		tweetObj.setFromString(value.toString());
-		context.write(tweetObj.getDate(), one);       
+		
+		context.write(getDate(value), one);       
     }
-	
+	/**
+		0 = tweet ID
+		1 = data/time
+		2 = hashtages
+		3 = tweet
+	*/
+	public Text getDate(Text value){
+		String[] tweetData = value.toString().split(";");
+		String[] dates = tweetData.split(",");
+		return new Text(dates[0]);
+	}
 	public String minMax(int value){
 	//this keeps it in the 1-5,6-10 range
 		value = (value % 5 == 0) ? value-1 : value; 

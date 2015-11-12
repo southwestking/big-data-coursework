@@ -13,7 +13,7 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
    	 public void map(Object key, Text value, Context context) throws IOException, InterruptedException 	
 	{
       
-		int tweetLength = getTweet(value).length();
+		int tweetLength = getTweet().length();
 		if(tweetLength > 0 && tweetLength < 141)
 			context.write(one, new IntWritable(tweetLength));	        
     	}

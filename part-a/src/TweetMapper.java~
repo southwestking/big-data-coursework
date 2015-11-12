@@ -7,16 +7,14 @@ import org.apache.commons.lang.StringUtils;
 
 public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     
-	//key has to be the same for the count 
-	private final Text one = new Text("1");
+	private final IntWritable one = new IntWritable(1);
 	
-   	 public void map(Object key, Text value, Context context) throws IOException, InterruptedException 	
-	{
-      
+    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+  
 		int tweetLength = getTweet(value).length();
 		if(tweetLength > 0 && tweetLength < 141)
-			context.write(one, new IntWritable(tweetLength));	        
-    	}
+			context.write(new Text(minMax(tweetLength)), one);	        
+    }
 
 	public String getTweet(Text txt){
      	String dump = txt.toString();
@@ -27,9 +25,11 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 		return "";
 	}
 	
+	
 	public String minMax(int value){
 	//this keeps it in the 1-5,6-10 range
 		value = (value % 5 == 0) ? value-1 : value; 
+			
 		if (value<=5)
 			return (1 + "-" + 5);
 
