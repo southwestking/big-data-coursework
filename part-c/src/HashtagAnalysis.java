@@ -1,5 +1,9 @@
 class HashtagAnalysis {
 	
+	//String[] supportingPhrase = ["go", "team", "proudof"]	
+
+	String Countries = ""; 
+
 	public HashtagAnalysis(){
 	
 	}

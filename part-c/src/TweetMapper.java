@@ -1,8 +1,17 @@
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.StringTokenizer;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
+//import org.apache.hadoop.io.IntWritable;
+//import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import java.io.*;
+import java.util.*;
+import java.net.*;
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapred.*;
+import org.apache.hadoop.util.*;
 
 public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     
@@ -10,7 +19,28 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         	
-		
+  URI fileUri = context.getCacheFiles()[0];
+	Map<String, String> map = new HashMap<String, String>();
+        FileSystem fs = FileSystem.get(context.getConfiguration());
+        FSDataInputStream in = fs.open(new Path(fileUri));
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+ 	String line = null;
+	try {
+		 br.readLine();
+
+        	while ((line = br.readLine()) != null) {
+			String[] fields = line.split(",");
+			map.put(fields[0],fields[1]);
+		}
+ br.close();
+	} catch (IOException e1) {
+        
+	}		
+
+
+
+
 		String[] tages = getHashTags(value);
 		for(String tag : tages)
 			context.write(new Text(checkHashtages(tag)), one);
@@ -54,8 +84,7 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 		String[] tweetData = value.toString().split(";");
 		return tweetData[2].split(" ");
 	}
-
-
+	
 	public String minMax(int value){
 	//this keeps it in the 1-5,6-10 range
 		value = (value % 5 == 0) ? value-1 : value; 

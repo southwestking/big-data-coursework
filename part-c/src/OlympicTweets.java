@@ -22,6 +22,7 @@ public class OlympicTweets {
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(IntWritable.class);
     job.setNumReduceTasks(1);
+    job.addCacheFile(new Path("data.csv").toUri());
     Path outputPath = new Path(output);
     FileInputFormat.setInputPaths(job, StringUtils.join(input, ","));
     FileOutputFormat.setOutputPath(job, outputPath);
