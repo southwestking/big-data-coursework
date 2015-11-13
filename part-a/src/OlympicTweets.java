@@ -12,7 +12,7 @@ public class OlympicTweets {
 
   public static void runJob(String[] input, String output) throws Exception {
 
-        Configuration conf = new Configuration();
+    Configuration conf = new Configuration();
 
     Job job = new Job(conf);
     job.setJarByClass(OlympicTweets.class);

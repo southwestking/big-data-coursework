@@ -1,88 +1,66 @@
-//import java.io.IOException;
-import java.util.StringTokenizer;
-//import org.apache.hadoop.io.IntWritable;
-//import org.apache.hadoop.io.Text;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import org.apache.hadoop.fs.*;
-import org.apache.hadoop.conf.*;
-import org.apache.hadoop.io.*;
-import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.net.URI;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.Path;
 
 public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
-    
+   	static boolean dataLoaded = true;	
 	private final IntWritable one = new IntWritable(1);
+	static BufferedReader br;
+	private List <String[]> list = new ArrayList<>();
+	private final String[] supportPhrases = {"go", "team"}; 
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-        	
-  URI fileUri = context.getCacheFiles()[0];
-	Map<String, String> map = new HashMap<String, String>();
-        FileSystem fs = FileSystem.get(context.getConfiguration());
-        FSDataInputStream in = fs.open(new Path(fileUri));
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
- 	String line = null;
-	try {
-		 br.readLine();
-
-        	while ((line = br.readLine()) != null) {
-			String[] fields = line.split(",");
-			map.put(fields[0],fields[1]);
+        if(dataLoaded){
+  			URI fileUri = context.getCacheFiles()[0];
+        	FileSystem fs = FileSystem.get(context.getConfiguration());
+        	FSDataInputStream in = fs.open(new Path(fileUri));
+			br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+ 			String line = null;
+			try {
+				
+				br.readLine();
+        		while ((line = br.readLine()) != null)
+					list.add(line.toLowerCase().split(","));
+		 
+ 				br.close();
+				 
+			} catch (IOException e1) {
+        
+			}		
+			dataLoaded=false;
 		}
- br.close();
-	} catch (IOException e1) {
-        
-	}		
 
-
-
-
-		String[] tages = getHashTags(value);
-		for(String tag : tages)
-			context.write(new Text(checkHashtages(tag)), one);
-        
+		 String tages = getHashTags(value).toLowerCase(); 		
+		context.write(new Text(checkHashtages(tages)), one);
     }
-	
 		
 	public String checkHashtages(String tag){
-		
-		if(tag.contains("gogb") || tag.contains("teamgb"))
-			return "Great Britain";
-		if(tag.contains("gousa") || tag.contains("teamusa"))
-			return "United States of America";
-		if(tag.contains("gojam") || tag.contains("teamjam"))
-			return "Jamaica";
-		if(tag.contains("gojor") || tag.contains("teamjor"))
-			return "Jordan";
-		if(tag.contains("goita") || tag.contains("teamita"))
-			return "Italy";		
-		if(tag.contains("gokaz") || tag.contains("teamkaz"))
-			return "Kazakhstan";
-		if(tag.contains("gorus") || tag.contains("teamrus"))
-			return "Russia";
-		if(tag.contains("gokor") || tag.contains("teamkor"))
-			return "South Korea";
-		if(tag.contains("goarg") || tag.contains("teamarg"))
-			return "Argentina";	
-			
-			
-		return "not counted";	
+		for (String[] entries : list){
+				for(String entry :entries)
+					if (tag.contains(supportPhrases[0]+entry) || tag.contains(supportPhrases[1]+entry))
+						return entries[1];
+				
+		}
+		return "uncounted";	
 	}
 
-/**
+	/**
 		0 = tweet ID
 		1 = data/time
 		2 = hashtages
 		3 = tweet
 	*/
-	public String[] getHashTags(Text value){
-
-		String[] tweetData = value.toString().split(";");
-		return tweetData[2].split(" ");
+	public String getHashTags(Text value){
+		return value.toString().split(";")[2];
 	}
 	
 	public String minMax(int value){

@@ -8,10 +8,8 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
     
 	private final IntWritable one = new IntWritable(1);
 	
-	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         
-		
 		context.write(getDate(value), one);       
     }
 	/**
