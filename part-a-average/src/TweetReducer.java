@@ -17,14 +17,12 @@ public class TweetReducer extends Reducer<Text, IntWritable, Text, IntWritable> 
         int count = 0;
         for (IntWritable value : values) {
 
-            //complete code here
             sum+=value.get();
             count++;
         }
         int avg = sum/count;
                result.set(sum);
 
-        //complete code here
 	context.write(key, new IntWritable(avg));
     }
 

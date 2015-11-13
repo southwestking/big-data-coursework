@@ -20,6 +20,7 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 	
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         if(dataLoaded){
+			//gets file 
   			URI fileUri = context.getCacheFiles()[0];
         	FileSystem fs = FileSystem.get(context.getConfiguration());
         	FSDataInputStream in = fs.open(new Path(fileUri));
@@ -40,39 +41,20 @@ public class TweetMapper extends Mapper<Object, Text, Text, IntWritable> {
 		}
 
 		 String tages = getHashTags(value).toLowerCase(); 		
-		context.write(new Text(checkHashtages(tages)), one);
+		context.write(new Text(checkHashtags(tages)), one);
     }
 		
-	public String checkHashtages(String tag){
+	public String checkHashtags(String tag){
 		for (String[] entries : list){
 				for(String entry :entries)
 					if (tag.contains(supportPhrases[0]+entry) || tag.contains(supportPhrases[1]+entry))
-						return entries[1];
+						return entries[0];
 				
 		}
 		return "uncounted";	
 	}
 
-	/**
-		0 = tweet ID
-		1 = data/time
-		2 = hashtages
-		3 = tweet
-	*/
 	public String getHashTags(Text value){
 		return value.toString().split(";")[2];
-	}
-	
-	public String minMax(int value){
-	//this keeps it in the 1-5,6-10 range
-		value = (value % 5 == 0) ? value-1 : value; 
-			
-		if (value<=5)
-			return (1 + "-" + 5);
-
-		int from = value - value % 5 + 1;
-		int to = from + 4;
-		return (from + "-" + to);
-
 	}
 }

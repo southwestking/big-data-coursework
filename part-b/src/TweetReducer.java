@@ -16,15 +16,11 @@ public class TweetReducer extends Reducer<Text, IntWritable, Text, IntWritable> 
         int sum = 0;
 
         for (IntWritable value : values) {
-
-            //complete code here
             sum+=value.get();
         }
 
-               result.set(sum);
-
-        //complete code here
-	context.write(key, new IntWritable(sum));
+       result.set(sum);
+	   context.write(key, new IntWritable(sum));
     }
 
 }
